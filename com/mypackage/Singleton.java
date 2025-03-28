@@ -1,11 +1,16 @@
 package com.mypackage;
 
-public enum Singleton {
-    INSTANCE;
+public class Singleton {
+    private static Singleton instance = null;
 
-    // Singleton logic here
-    public void doSomething() {
-        //System.out.println("Doing something...");
+    private Singleton() {}
+
+    public static  Singleton getInstance() {
+        synchronized (Singleton.class) {  //    T5  ... T1000Thread
+            if (instance == null) {   // T4
+                instance = new Singleton();
+            }
+        }
+        return instance;
     }
-
 }

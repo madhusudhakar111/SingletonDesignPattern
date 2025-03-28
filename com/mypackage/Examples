@@ -118,6 +118,72 @@ Interview Cross Question
 What is use of volatile keyword here ? What is significance of volatile in the above code ?
 
 
+------------------------------------------------------------------------------------------------------------------------
+
+Object creation steps ;
+
+Original  Instruction
+
+Step1 : MemoryAllocation The JVM allocates memory for the new object using the new keyword.
+
+Step 2 : Constructor Execution: The constructor is called to initialize the object's fields.
+
+Step3  :  Object Initialization: The object is initialized, and the reference to it is stored in a variable.
+
+
+
+
+     Employee emp = new Employee("John Doe", 101, 50000.00);
+
+
+public class Employee {
+    // Instance variables (fields)
+    String name;
+    int id;
+
+    // default constructor
+    public Employee() {
+
+    }
+
+    // Constructor to initialize the fields
+    public Employee(String name, int id) {
+        this.name = name;       // Initialize the name field
+        this.id = id;           // Initialize the id field
+
+    }
+
+}
+
+Instruction Reordering
+
+Original Code:
+
+        int a = 5;
+        int b = 10;
+        int c = 0;
+
+        c = a + b;        // Instruction 1
+        b = b * 2;        // Instruction 2
+        a = a + b;        // Instruction 3
+
+        System.out.println("a: " + a + ", b: " + b + ", c: " + c);
+
+Reordered Code:
+
+        int a = 5;
+        int b = 10;
+        int c = 0;
+
+        b = b * 2;        // Instruction 1 (no dependency on 'a')
+        a = a + b;        // Instruction 2 (uses updated 'b', but no dependency on 'c')
+        c = a + b;        // Instruction 3 (uses 'a' and 'b')
+
+        System.out.println("a: " + a + ", b: " + b + ", c: " + c);
+
+
+
+
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -328,3 +394,5 @@ public class Tester {
          }
      }
  }
+
+

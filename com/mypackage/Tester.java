@@ -1,30 +1,17 @@
 package com.mypackage;
 
-import java.io.*;
-
 public class Tester {
-    public static void main(String[] args) {
-        Singleton singleton1 = Singleton.INSTANCE;
 
-        // Serialization
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("singleton.ser"))) {
-            out.writeObject(singleton1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static void main(String[] args) throws Exception {
 
-        // Deserialization
-        Singleton singleton2 = null;
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("singleton.ser"))) {
-            singleton2 = (Singleton) in.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        Singleton obj1 =  Singleton.getInstance();
+        Singleton obj2 =  Singleton.getInstance();
 
-        System.out.println("Are both instances the same after deserialization? " + (singleton1 == singleton2));
+        System.out.println("Obj1 Hashcode --> " + obj1.hashCode());
+        System.out.println("Obj1 Hashcode --> " + obj2.hashCode());
 
-        if (singleton2 != null) {
-            singleton2.doSomething();
-        }
+        System.out.println(obj1 == obj2);
+
+
     }
 }
