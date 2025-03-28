@@ -1,3 +1,14 @@
+What is Sigleton
+
+Singleton is a design pattern that ensures a class has only one instance ( Single Object creation )
+
+It is commonly used  scenarios  where a single shared resource,
+
+such as a database connection, logger, or configuration manager, needs to be accessed(utility methods) across an application.
+
+
+
+
 package com.mypackage;
 
 public class Singleton {
@@ -14,7 +25,7 @@ public class Singleton {
 }
 
 
-----------------------------------------------------------
+--------------------------------------------------------- -
 
 
 
@@ -29,7 +40,7 @@ public class Tester {
         Singleton obj2 =  Singleton.getInstance();
 
         System.out.println("Obj1 Hashcode --> " + obj1.hashCode());
-        System.out.println("Obj1 Hashcode --> " + obj2.hashCode());
+        System.out.println("Obj2 Hashcode --> " + obj2.hashCode());
 
         System.out.println(obj1 == obj2);
 
@@ -133,7 +144,9 @@ Step3  :  Object Initialization: The object is initialized, and the reference to
 
 
 
-     Employee emp = new Employee("John Doe", 101, 50000.00);
+
+
+     Employee emp = new Employee("John Doe", 101);
 
 
 public class Employee {
@@ -154,6 +167,8 @@ public class Employee {
     }
 
 }
+
+It will prevent the Instruction Reordering . it means will give visibilaty guaranteee.
 
 Instruction Reordering
 

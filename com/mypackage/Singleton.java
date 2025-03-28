@@ -6,10 +6,8 @@ public class Singleton {
     private Singleton() {}
 
     public static  Singleton getInstance() {
-        synchronized (Singleton.class) {  //    T5  ... T1000Thread
-            if (instance == null) {   // T4
-                instance = new Singleton();
-            }
+        if (instance == null) {
+            instance = new Singleton();
         }
         return instance;
     }

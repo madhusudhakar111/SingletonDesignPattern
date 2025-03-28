@@ -1,3 +1,4 @@
+
 package com.mypackage;
 
 public class Tester {
@@ -8,7 +9,7 @@ public class Tester {
         Singleton obj2 =  Singleton.getInstance();
 
         System.out.println("Obj1 Hashcode --> " + obj1.hashCode());
-        System.out.println("Obj1 Hashcode --> " + obj2.hashCode());
+        System.out.println("Obj2 Hashcode --> " + obj2.hashCode());
 
         System.out.println(obj1 == obj2);
 
