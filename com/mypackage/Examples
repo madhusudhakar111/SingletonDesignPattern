@@ -1,0 +1,330 @@
+package com.mypackage;
+
+public class Singleton {
+    private static Singleton instance = null;
+
+    private Singleton() {}
+
+    public static  Singleton getInstance() {
+        if (instance == null) {
+            instance = new Singleton();
+        }
+     return instance;
+    }
+}
+
+
+----------------------------------------------------------
+
+
+
+
+package com.mypackage;
+
+public class Tester {
+
+    public static void main(String[] args) throws Exception {
+
+        Singleton obj1 =  Singleton.getInstance();
+        Singleton obj2 =  Singleton.getInstance();
+
+        System.out.println("Obj1 Hashcode --> " + obj1.hashCode());
+        System.out.println("Obj1 Hashcode --> " + obj2.hashCode());
+
+        System.out.println(obj1 == obj2);
+
+
+    }
+}
+
+
+
+
+
+Interview Cross Question
+
+1. Will it work in multithreaded environment ? Ans : No
+2. will it work in serilization time ? Ans : No
+3. Will it work if I clone this Object ? Ans : No
+4. Wil it work if I modified the private constructor to public constructor using Reflaction? Ans : No
+
+
+
+// T1, T2 thread are accessing at same time
+
+----------------------------------------------------------
+Multithreaded Environment
+
+
+
+
+package com.mypackage;
+
+public class Singleton {
+    private static volatile Singleton instance = null;
+
+    private Singleton() {}
+
+    public static  Singleton getInstance() {
+     synchronized (Singleton.class) {
+        if (instance == null) {
+            instance = new Singleton();
+        }
+     }
+     return instance;
+    }
+}
+
+
+
+
+
+
+Interview Cross Question
+
+This code obsolute works. but it will give performance issue. what is Solution ? Ans :  Double checking.
+
+----------------------------------------------------------
+
+
+
+
+
+package com.mypackage;
+
+public class Singleton {
+    private static volatile Singleton instance = null;
+
+    private Singleton() {}
+
+    public static Singleton getInstance() {
+        if (instance == null) {
+            synchronized (Singleton.class) {
+                if (instance == null) {
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    }
+}
+
+
+
+
+
+Interview Cross Question
+
+What is use of volatile keyword here ? What is significance of volatile in the above code ?
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+package com.mypackage;
+
+import java.io.*;
+
+public class Tester {
+
+    public static void main(String[] args) throws Exception {
+        Singleton instance1 = Singleton.getInstance();
+
+        // Serialize the Singleton instance
+        FileOutputStream fileOut = new FileOutputStream("singleton.ser");
+        ObjectOutputStream out = new ObjectOutputStream(fileOut);
+        out.writeObject(instance1);
+        out.close();
+        fileOut.close();
+        System.out.println("Serialized Singleton Instance: " + instance1.hashCode());
+
+        // Deserialize the Singleton instance
+        FileInputStream fileIn = new FileInputStream("singleton.ser");
+        ObjectInputStream in = new ObjectInputStream(fileIn);
+        Singleton instance2 = (Singleton) in.readObject();
+        in.close();
+        fileIn.close();
+        System.out.println("Deserialized Singleton Instance: " + instance2.hashCode());
+
+        // Checking if both instances are the same
+        System.out.println("Are both instances the same? " + (instance1 == instance2));
+    }
+}
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+package com.mypackage;
+
+import java.io.*;
+
+public class Tester {
+
+    public static void main(String[] args) throws Exception {
+        Singleton instance1 = Singleton.getInstance();
+
+        // Serialize the Singleton instance
+        FileOutputStream fileOut = new FileOutputStream("singleton.ser");
+        ObjectOutputStream out = new ObjectOutputStream(fileOut);
+        out.writeObject(instance1);
+        out.close();
+        fileOut.close();
+        System.out.println("Serialized Singleton Instance: " + instance1);
+
+        // Deserialize the Singleton instance
+        FileInputStream fileIn = new FileInputStream("singleton.ser");
+        ObjectInputStream in = new ObjectInputStream(fileIn);
+        Singleton instance2 = (Singleton) in.readObject();
+        in.close();
+        fileIn.close();
+        System.out.println("Deserialized Singleton Instance: " + instance2);
+
+        // Checking if both instances are the same
+        System.out.println("Are both instances the same? " + (instance1 == instance2));
+    }
+}
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+
+package com.mypackage;
+
+public class Singleton implements Cloneable {
+
+    private static volatile Singleton instance = null;
+
+    private Singleton() {
+    }
+
+    public static Singleton Instance() {
+        if (instance == null) {
+            synchronized(Singleton.class) {
+                if (instance == null) {
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    }
+
+    // Override clone to allow cloning
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone(); // Call Object's clone method
+    }
+}
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+import java.lang.reflect.Constructor;
+
+public class Singleton {
+    // The unique instance of the class
+    private static Singleton instance;
+
+    // Private constructor to prevent instantiation
+    private Singleton() {
+        if (instance != null) {
+            throw new RuntimeException("Singleton instance already exists!");
+        }
+    }
+
+    // Method to get the Singleton instance
+    public static Singleton getInstance() {
+        if (instance == null) {
+            synchronized (Singleton.class) {
+                if (instance == null) {
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    }
+
+    // Prevent reflection from creating a new instance
+    protected Object readResolve() {
+        return instance;
+    }
+
+    // Test if reflection can break the Singleton
+    public static void main(String[] args) throws Exception {
+        Singleton singleton1 = Singleton.getInstance();
+
+        // Use reflection to try to create a second instance
+        Constructor<Singleton> constructor = Singleton.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        Singleton singleton2 = constructor.newInstance();
+
+        System.out.println(singleton1 == singleton2); // Should print false, because the second instance is not allowed
+    }
+}
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+package com.mypackage;
+
+public enum Singleton {
+    INSTANCE;
+
+    // Singleton logic here
+    public void doSomething() {
+        System.out.println("Doing something...");
+    }
+
+}
+
+------------------------------------------------------------------------------------------------------------------------
+
+package com.mypackage;
+
+public class Tester {
+    public static void main(String[] args) {
+        Singleton singleton1 = Singleton.INSTANCE;
+        Singleton singleton2 = Singleton.INSTANCE;
+        System.out.println("singleton1 " + singleton1.hashCode());
+        System.out.println("singleton2 " + singleton2.hashCode());
+        System.out.println("Are both instances the same? " + (singleton1 == singleton2));
+        singleton1.doSomething();
+
+
+    }
+}
+
+
+ ------------------------------------------------------------------------------------------------------------------------
+
+
+ package com.mypackage;
+
+ import java.io.*;
+
+ public class Tester {
+     public static void main(String[] args) {
+         Singleton singleton1 = Singleton.INSTANCE;
+
+         // Serialization
+         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("singleton.ser"))) {
+             out.writeObject(singleton1);
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
+
+         // Deserialization
+         Singleton singleton2 = null;
+         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("singleton.ser"))) {
+             singleton2 = (Singleton) in.readObject();
+         } catch (IOException | ClassNotFoundException e) {
+             e.printStackTrace();
+         }
+
+         System.out.println("Are both instances the same after deserialization? " + (singleton1 == singleton2));
+
+         if (singleton2 != null) {
+             singleton2.doSomething();
+         }
+     }
+ }
